@@ -1,0 +1,35 @@
+# Core Dependencies
+numpy
+pandas
+matplotlib
+scipy
+
+# Large Language Model (LLM)
+google-generativeai  # Gemini API
+
+# Vector Database (Memory)
+pinecone-client  # If using Pinecone
+faiss-cpu  # If using FAISS
+
+# Computer Vision
+opencv-python
+face-recognition
+ultralytics  # YOLOv8 for object detection
+
+# GUI
+#tkinter  # Built-in, but listed for reference
+
+# Text-to-Speech
+pyttsx3  # Offline TTS
+gTTS  # Google Text-to-Speech (Optional)
+
+# Sentiment Analysis
+transformers
+torch
+nltk
+sentence-transformers
+vaderSentiment
+SpeechRecognition   
+pyaudio
+deepface
+mediapipe

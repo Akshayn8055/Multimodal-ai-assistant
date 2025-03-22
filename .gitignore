@@ -1,0 +1,35 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore data files
+data/memory_index.faiss
+data/memory.json
+data/personality.json
+
+# Ignore VS Code settings (optional)
+.vscode/
+
+# Ignore environment files
+.env
+*.env
+
+# Ignore virtual environment
+venv/
+env/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Ignore compiled Python files
+*.cpython-*
+
+# Ignore configuration files
+
+
+# Ignore test or temporary scripts (if applicable)
+geminitest.py
