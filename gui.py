@@ -36,14 +36,10 @@ class BagleyGUI:
         self.camera_button = tk.Button(self.window, text="📷 Open Camera", command=self.open_camera)
         self.camera_button.pack(pady=5)
 
-        # Shutdown Button
-        self.shutdown_button = tk.Button(self.window, text="Shutdown", command=self.shutdown)
-        self.shutdown_button.pack(pady=5)
-
         # AI Modules
         self.chatbot = ChatBot()  # Instantiate ChatBot
         self.memory = AIMemory()
-        self.camera = Camera(self.chatbot)  # Pass chatbot to Camera
+        self.camera = Camera(self.chatbot)  # ✅ Pass chatbot to Camera
         self.personality = AIPersonality()
         self.speech = SpeechSynthesizer()
         self.sentiment_analyzer = SentimentAnalyzer()
@@ -70,31 +66,31 @@ class BagleyGUI:
     def generate_response(self, user_text):
         """Generate AI response incorporating memory and personality."""
 
-        # Convert user input to embedding
+        # ✅ Convert user input to embedding
         query_embedding = self.chatbot.embed_text(user_text)
 
-        # Use the correct embedding format in memory search
+        # ✅ Use the correct embedding format in memory search
         relevant_memory = self.memory.search_memory(query_embedding.cpu().numpy())
 
         memory_context = "\n".join(relevant_memory) if relevant_memory else "No previous context."
 
-        # Get sentiment analysis results
+        # ✅ Get sentiment analysis results
         sentiment_result = self.sentiment_analyzer.analyze(user_text)  # Corrected variable
         emotion = sentiment_result["facial_emotion"] if sentiment_result["facial_emotion"] != "Neutral" else sentiment_result["text_emotion"]
 
-        # Store detected emotion in memory and respond
-        self.chatbot.respond_to_emotion(emotion)  # Use the correct method
+        # ✅ Store detected emotion in memory (without responding)
+        self.chatbot.analyze_emotion(emotion)
 
-        # Generate AI response
+        # ✅ Generate AI response
         response = self.chatbot.chat(user_text)
 
-        # Adjust AI personality based on sentiment
+        # ✅ Adjust AI personality based on sentiment
         self.personality.adjust_based_on_interaction(user_text, response, emotion)
 
-        # Display AI response
+        # ✅ Display AI response
         self.update_chat("Bagley AI", response)
         
-        # Use speech synthesis if available
+        # ✅ Use speech synthesis if available
         if hasattr(self.speech, "speak"):
             self.speech.speak(response)
         else:
@@ -112,14 +108,6 @@ class BagleyGUI:
         """Open camera for face/object detection"""
         self.update_chat("Bagley AI", "Opening Camera...")
         threading.Thread(target=self.camera.start_camera).start()
-
-    def shutdown(self):
-        """Shutdown the application safely."""
-        # Save memory and release resources
-        self.chatbot.memory.save_memory()
-        if hasattr(self, 'camera') and self.camera.running:
-            self.camera.stop()
-        self.window.destroy()
 
     def run(self):
         """Run the GUI"""

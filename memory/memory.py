@@ -2,7 +2,6 @@ import faiss
 import numpy as np
 import json
 import os
-import shutil
 
 MEMORY_DB_FILE = "data/memory.json"
 VECTOR_DB_FILE = "data/memory_index.faiss"
@@ -15,7 +14,7 @@ class AIMemory:
         self.index = self.load_vector_db()
 
     def load_memory(self):
-        """Load memory from a JSON file, with error handling."""
+        """Load memory from JSON file or create an empty one."""
         os.makedirs("data", exist_ok=True)  # Create directory if missing
         
         if not os.path.exists(MEMORY_DB_FILE):
@@ -23,39 +22,13 @@ class AIMemory:
             with open(MEMORY_DB_FILE, "w") as file:
                 json.dump([], file, indent=4)
 
-        try:
-            with open(MEMORY_DB_FILE, 'r') as file:
-                return json.load(file)
-        except json.JSONDecodeError as e:
-            print(f"JSONDecodeError: {e}. Resetting memory.")
-            # Reset the memory file if corrupted
-            with open(MEMORY_DB_FILE, 'w') as file:
-                json.dump([], file)
-            return []
-        except Exception as e:
-            print(f"Error loading memory: {e}")
-            return []
+        with open(MEMORY_DB_FILE, "r") as file:
+            return json.load(file)
 
     def save_memory(self):
-        """Save memory entries to JSON file with atomic write and backup."""
-        try:
-            # Backup existing memory file
-            if os.path.exists(MEMORY_DB_FILE):
-                backup_file = MEMORY_DB_FILE + ".bak"
-                shutil.copy(MEMORY_DB_FILE, backup_file)
-
-            # Write to a temporary file first
-            temp_file = MEMORY_DB_FILE + ".tmp"
-            with open(temp_file, 'w') as file:
-                json.dump(self.memory, file, indent=4)
-
-            # Atomically move the temp file to the target file
-            os.replace(temp_file, MEMORY_DB_FILE)
-        except Exception as e:
-            print(f"Error saving memory: {e}")
-            # Restore from backup in case of error
-            if os.path.exists(MEMORY_DB_FILE + ".bak"):
-                shutil.copy(MEMORY_DB_FILE + ".bak", MEMORY_DB_FILE)
+        """Save memory entries to JSON file."""
+        with open(MEMORY_DB_FILE, "w") as file:
+            json.dump(self.memory, file, indent=4)
 
     def load_vector_db(self):
         """Load or create FAISS vector database."""
